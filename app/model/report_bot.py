@@ -29,15 +29,22 @@ tree = app_commands.CommandTree(client)
 @tree.command(guild=discord.Object(id=server_id), name='setup', description='Setup')
 @commands.has_permissions(manage_guild=True)
 async def setup(interaction: discord.Interaction):
+    if interaction.channel.name != 'ticket':
+        await interaction.response.send_message(f"Você só pode mandar isso no canal de tickets", ephemeral=True)
+        return
+
     await interaction.response.send_message(f"Painel criado!", ephemeral=True)
 
     await interaction.channel.send(f"Mensagem do painel!", embed=embed, view=DropdownView())
 
 @tree.command(guild=discord.Object(id=server_id), name='fecharticket', description='FecharTicket')
 async def _fecharticket(interaction: discord.Interaction):
-    mod = interaction.guild.get_role(960015181054885928)
-    if str(interaction.user.id) in interaction.channel.name or mod in interaction.author.role:
+
+    if str(interaction.user) in str(interaction.channel.name):
         await interaction.response.send_message(f"O ticket foi arquivado por {interaction.user.name}")
-        await interaction.channel.archive(locked=True)
+        await interaction.channel.edit(archived=True)
     else:
-        await interaction.response.send_message("Isso não pode ser executado")
+        print(interaction.channel)
+        print(interaction.user)
+        print(interaction.guild.get_role(960015181054885928))
+        await interaction.response.send_message("Isso não pode ser executado aqui")

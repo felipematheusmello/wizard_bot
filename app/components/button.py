@@ -11,23 +11,24 @@ class Button(discord.ui.View):
         self.stop()
 
         ticket = None
+        if interaction.channel.name != 'ticket':
+            await interaction.response.send_message(ephemeral=True, content=f"Você só pode mandar isso no canal de tickets" )
+            return
 
-        for therad in interaction.channel.threads:
-            if f'{interaction.user.id}' in therad.name:
-                if therad.archived:
-                    ticket = therad
+        async for thread in interaction.channel.archived_threads():
+            if f'{interaction.user.id}' in thread.name:
+                if thread.archived:
+                    ticket = thread
 
                 else:
                     await interaction.response.send_message(ephemeral=True, content=f"Você já tem um ticket em andamento!" )
                     return
 
         if ticket != None:
-            await  ticket.unarchive()
-            await ticket.edit(name=f"{self.emoji} {interaction.user.name} {interaction.user.id}", auto_archive_duration=10080, invitable=False)
+            await ticket.edit(name=f"{button.emoji} {interaction.user.name} {interaction.user.id}", auto_archive_duration=10080, invitable=False, archived=False)
 
         else:
-            ticket = await interaction.channel.create_thread(name=f'{interaction} {interaction.user.name} {interaction.user.id}', auto_archive_duration=10080, type=discord.ChannelType.public_thread)
-            await ticket.edit(invitable=False)
+            ticket = await interaction.channel.create_thread(name=f'ticket {interaction.user.name} {interaction.user.id}', auto_archive_duration=10080, type=discord.ChannelType.public_thread)
 
         await interaction.response.send_message(ephemeral=True, content=f"Criei um ticket para você! {ticket.mention}")
         await ticket.send(
