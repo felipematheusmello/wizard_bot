@@ -1,8 +1,10 @@
 import discord
 from app.views.dropdrown_view import DropdownView
+from app.views.notifications import NotificationView
 from discord import app_commands
 from discord.ext import commands
 from app.components.message import embed
+from app.components.notification import create_notification
 
 server_id = 691533643914412051
 
@@ -36,6 +38,20 @@ async def setup(interaction: discord.Interaction):
     await interaction.response.send_message(f"Painel criado!", ephemeral=True)
 
     await interaction.channel.send(f"Mensagem do painel!", embed=embed, view=DropdownView())
+
+@tree.command(guild=discord.Object(id=server_id), name='aviso', description='Aviso')
+@commands.has_permissions(manage_guild=True)
+async def aviso(interaction: discord.Interaction, titulo: str, mensagem: str):
+    embed = create_notification(title=titulo.capitalize(), description=mensagem)
+    if 'atualizações' not in str(interaction.channel.name):
+        await interaction.response.send_message(f"Você só pode mandar isso no canal de Atualizações", ephemeral=True)
+        return
+
+    if not titulo and not mensagem:
+        await interaction.response.send_message(f"Titulo e nome são necessários para essa ação", ephemeral=True)
+        return
+
+    await interaction.channel.send(None, embed=embed, view=NotificationView())
 
 @tree.command(guild=discord.Object(id=server_id), name='fecharticket', description='FecharTicket')
 async def _fecharticket(interaction: discord.Interaction):
