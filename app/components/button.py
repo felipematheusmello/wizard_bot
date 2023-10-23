@@ -28,7 +28,7 @@ class Button(discord.ui.View):
             await ticket.edit(name=f"{button.emoji} {interaction.user.name} {interaction.user.id}", auto_archive_duration=10080, invitable=False, archived=False)
 
         else:
-            ticket = await interaction.channel.create_thread(name=f'ticket {interaction.user.name} {interaction.user.id}', auto_archive_duration=10080, type=discord.ChannelType.public_thread)
+            ticket = await interaction.channel.create_thread(name=f'ticket {interaction.user.name} {interaction.user.id}', auto_archive_duration=10080, type=discord.ChannelType.private_thread)
 
         await interaction.response.send_message(ephemeral=True, content=f"Criei um ticket para você! {ticket.mention}")
         await ticket.send(
