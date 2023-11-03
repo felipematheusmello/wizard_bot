@@ -28,6 +28,14 @@ client = ReportBotClient()
 tree = app_commands.CommandTree(client)
 # Adicione seus comandos da árvore aqui
 
+def _check_roles(interaction: discord.Interaction, roles: [int]):
+    for role in roles:
+        if interaction.user.get_role(role):
+            return True
+
+    return False
+
+
 @tree.command(guild=discord.Object(id=server_id), name='setup', description='Setup')
 @commands.has_permissions(manage_guild=True)
 async def setup(interaction: discord.Interaction):
@@ -53,10 +61,11 @@ async def aviso(interaction: discord.Interaction, titulo: str, mensagem: str):
 
     await interaction.channel.send(None, embed=embed, view=NotificationView())
 
+
 @tree.command(guild=discord.Object(id=server_id), name='fecharticket', description='FecharTicket')
 async def _fecharticket(interaction: discord.Interaction):
-
-    if str(interaction.user) in str(interaction.channel.name):
+    roles = [691673359896805418, 960015181054885928, 692076344351260732]
+    if str(interaction.user) in str(interaction.channel.name) or _check_roles(interaction=interaction, roles=roles):
         await interaction.response.send_message(f"O ticket foi arquivado por {interaction.user.name}")
         await interaction.channel.edit(archived=True)
     else:
