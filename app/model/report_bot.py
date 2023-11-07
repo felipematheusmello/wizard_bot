@@ -39,7 +39,7 @@ def _check_roles(interaction: discord.Interaction, roles: [int]):
 @tree.command(guild=discord.Object(id=server_id), name='setup', description='Setup')
 @commands.has_permissions(manage_guild=True)
 async def setup(interaction: discord.Interaction):
-    if interaction.channel.name != 'ticket':
+    if 'ticket' in interaction.channel.name:
         await interaction.response.send_message(f"Você só pode mandar isso no canal de tickets", ephemeral=True)
         return
 
