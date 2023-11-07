@@ -11,7 +11,7 @@ class Button(discord.ui.View):
         self.stop()
 
         ticket = None
-        if interaction.channel.name != 'ticket':
+        if 'ticket' in interaction.channel.name:
             await interaction.response.send_message(ephemeral=True, content=f"Você só pode mandar isso no canal de tickets" )
             return
 
