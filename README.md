@@ -6,10 +6,10 @@
 
 
 ```
-    # create .env and put your discord bot token
+    # criar seu .env e coloque o Token
     pip install -r requirements.txt
     python ./main.py
 
-    all good enjoy it :)
+    Tudo pronto. Aproveite :)
 ```
 
