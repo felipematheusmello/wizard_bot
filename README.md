@@ -13,4 +13,3 @@
     all good enjoy it :)
 ```
 
-obs: some features need to be changed since it's focused in a server
